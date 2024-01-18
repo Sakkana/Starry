@@ -1,7 +1,10 @@
 use syscall_utils::deal_result;
+use axlog::error;
 
 #[no_mangle]
 pub fn syscall(syscall_id: usize, args: [usize; 6]) -> isize {
+    error!("[syscall] id = {:#?}, args = {:?}, entry", syscall_id, args);
+
     #[cfg(feature = "futex")]
     syscall_task::check_dead_wait();
     let ans = loop {
@@ -38,6 +41,8 @@ pub fn syscall(syscall_id: usize, args: [usize; 6]) -> isize {
     };
 
     let ans = deal_result(ans);
-    axlog::info!("syscall: {} -> {}", syscall_id, ans);
+    // axlog::info!("syscall: {} -> {}", syscall_id, ans);
+
+    error!("[syscall] id = {}, args = {:?}, return {}", syscall_id, args, ans);
     ans
 }
