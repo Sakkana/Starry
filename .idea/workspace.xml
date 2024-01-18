@@ -16,9 +16,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7c62798e-00ca-45fb-8290-e63c15b16cfe" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ulib/starry_libax/src/syscall/fs.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ulib/starry_libax/src/syscall/fs.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ulib/starry_libax/src/test.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ulib/starry_libax/src/test.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ulib/axstarry/syscall_entry/src/test.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ulib/axstarry/syscall_entry/src/test.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +67,7 @@
     "cf.advertisement.text.overridden": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "problem2",
+    "git-widget-placeholder": "lab3",
     "last_opened_file_path": "//wsl$/Ubuntu-22.04/home/ccyd/Local_Coding/OS/Starry",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
