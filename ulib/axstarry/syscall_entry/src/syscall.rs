@@ -19,7 +19,7 @@ pub fn syscall(syscall_id: usize, args: [usize; 6]) -> isize {
         #[cfg(feature = "syscall_mem")]
         {
             if let Ok(mem_syscall_id) = syscall_mem::MemSyscallId::try_from(syscall_id) {
-                error!("[syscall] id = {:#?}, args = {:?}, entry", mem_syscall_id, args);
+                // error!("[syscall] id = {:#?}, args = {:?}, entry", mem_syscall_id, args);
                 break syscall_mem::mem_syscall(mem_syscall_id, args);
             }
         }
@@ -28,7 +28,7 @@ pub fn syscall(syscall_id: usize, args: [usize; 6]) -> isize {
         {
             if let Ok(fs_syscall_id) = syscall_fs::FsSyscallId::try_from(syscall_id) {
                 // error!("{}", "----------------------------------------");
-                error!("[syscall] id = {:#?}, args = {:?}, entry", fs_syscall_id, args);
+                // error!("[syscall] id = {:#?}, args = {:?}, entry", fs_syscall_id, args);
                 break syscall_fs::fs_syscall(fs_syscall_id, args);
             }
         }
@@ -37,7 +37,7 @@ pub fn syscall(syscall_id: usize, args: [usize; 6]) -> isize {
 
         {
             if let Ok(task_syscall_id) = syscall_task::TaskSyscallId::try_from(syscall_id) {
-                error!("[syscall] id = {:#?}, args = {:?}, entry", task_syscall_id, args);
+                // error!("[syscall] id = {:#?}, args = {:?}, entry", task_syscall_id, args);
                 break syscall_task::task_syscall(task_syscall_id, args);
             }
         }
@@ -48,7 +48,7 @@ pub fn syscall(syscall_id: usize, args: [usize; 6]) -> isize {
 
     let ans = deal_result(ans);
 
-    error!("[syscall] id = {}, args = {:?}, return {}", syscall_id, args, ans);
+    // error!("[syscall] id = {}, args = {:?}, return {}", syscall_id, args, ans);
     // error!("{}", "----------------------------------------\n");
     ans
 }

@@ -1,5 +1,9 @@
 # StarryOS
 
+Sakkana 分叉自 [Starry](https://github.com/Azure-stars/Starry)。
+
+系统原型源自 [arceos](https://github.com/rcore-os/arceos)。
+
 ## 简介
 
 这里是StarryOS，一个基于ArceOS实现的宏内核。
