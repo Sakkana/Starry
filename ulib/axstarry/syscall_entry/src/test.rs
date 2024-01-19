@@ -377,9 +377,14 @@ pub const SDCARD_TESTCASES: &[&str] = &[
     // "hellostd",
     // "busybox ls",
     // "busybox sh",
+
     "busybox touch abc",
     "busybox mv abc bin/",
     "busybox ls bin/abc",
+
+    "busybox touch def",
+    "busybox mv def bin",
+    "busybox ls bin/def",
 ];
 
 pub const NETPERF_TESTCASES: &[&str] = &[

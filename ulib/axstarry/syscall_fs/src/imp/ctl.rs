@@ -269,27 +269,27 @@ pub fn syscall_renameat2(
     }
 
     let old_data = metadata(old_path.path())?;
-    // 旧路径是个文件夹
-    if old_data.is_dir() {
-        if !path_exists(new_path.path()) {
-            // 新路径不存在 -> 创建新路径
-            let _ = rename(old_path.path(), new_path.path());
-        } else if let Ok(new_data) = metadata(new_path.path()) {
-            // 新路径存在
-            if new_data.is_dir() {
-                let _ = rename(old_path.path(), new_path.path());
-            } else {
-                return Err(SyscallError::EPERM);
-            }
-        } else {
-            return Err(SyscallError::EPERM);
+    let new_data = match metadata(new_path.path()) {
+        Ok(metadata) => metadata,
+        Err(_) => return Err(SyscallError::EPERM),
+    };
+
+    error!("new path is dir = {}", new_data.is_dir() == true);
+
+    if new_data.is_dir() {
+        let mut new_path_real = new_path.path().to_string();
+        if !new_path_real.ends_with('/') {
+            new_path_real = new_path.path().to_string() + old_path.path();
+            error!("{}", new_path_real);
         }
-    } else if old_data.is_file() {
+        let _ = rename(old_path.path(), &new_path_real);
+    } else {
         let _ = rename(old_path.path(), new_path.path());
     }
 
+    error!("new path is dir = {}", new_data.is_dir() == true);
+
     Ok(0)
-    
 
     // HINT 3
     // metadata(old_path.path()) 会返回一个 Result<Metadata>
