@@ -247,17 +247,8 @@ pub fn syscall_renameat2(
     }
     // LAB3 从此处往上的代码不需要修改
     
-    
-    // HINT 1
-    // path_exists, metadata, remove_dir, remove_file, rename 函数的输入参数都是 &str，
-    // 你可以通过 old_path.path() new_path.path() 获取它俩的 &str 形式。
     error!("旧路径：{}, 新路径：{}", old_path.path(), new_path.path());
 
-
-    // HINT 2
-    // RenameFlags 是一个 bitflags，它常用的函数有 .contains(...) 和 ::from_bits(...)
-    // 可以找找内核中其他地方是怎么使用 bitflags 的，比如这个文件中的 syscall_fcntl64
-    
     // 旧路径不存在
     if !path_exists(old_path.path()) {
         return Err(SyscallError::EPERM);
@@ -269,34 +260,43 @@ pub fn syscall_renameat2(
     }
 
     let old_data = metadata(old_path.path())?;
-    let new_data = match metadata(new_path.path()) {
-        Ok(metadata) => metadata,
-        Err(_) => return Err(SyscallError::EPERM),
-    };
 
-    error!("new path is dir = {}", new_data.is_dir() == true);
+    // 新 item 存在 -> 分类讨论
+    if let Ok(new_data) = metadata(new_path.path()) {
+        // @1 存在 -> 分类讨论
+        
+        if (old_data.is_file() && new_data.is_file()) || (old_data.is_dir() && new_data.is_dir()) {
+            // file -> dir, dir -> file
+            // 重命名为已存在的 item -> 出错
+            return Err(SyscallError::EPERM);
+        } else if old_data.is_dir() && new_data.is_file() {
+            // dir -> file
+            // 目录放入文件内 -> 出错
+            return Err(SyscallError::EPERM);
+        } else {
+            // dir -> dir
+            // 文件放入目录内 -> 成功
+            error!("用户给的路径： {}", new_path.path().to_string());
 
-    if new_data.is_dir() {
-        let mut new_path_real = new_path.path().to_string();
-        if !new_path_real.ends_with('/') {
-            new_path_real = new_path.path().to_string() + old_path.path();
-            error!("{}", new_path_real);
+            // 改造反斜杠
+            let mut new_path_real = new_path.path().to_string();
+            if new_path_real.ends_with('/') {
+                new_path_real.pop();   
+            }
+
+            let index = old_path.path().rfind('/').unwrap_or(0);
+            let last_element = &old_path.path()[index..];
+
+            new_path_real = new_path.path().to_string() + last_element;
+            error!("改造后的路径： {}", new_path_real);
+            let _ = rename(old_path.path(), &new_path_real);
         }
-        let _ = rename(old_path.path(), &new_path_real);
     } else {
+        // 不存在 -> 直接改就行了
         let _ = rename(old_path.path(), new_path.path());
     }
 
-    error!("new path is dir = {}", new_data.is_dir() == true);
-
-    Ok(0)
-
-    // HINT 3
-    // metadata(old_path.path()) 会返回一个 Result<Metadata>
-    // 如果它是 Err()，说明文件打开失败，你可以用它检查文件是否存在；
-    // 如果它是 Ok()，则可以获取到一个 Metadata 类。
-    // 这个类里 .is_dir() 和 .is_file() 可以帮助你判断它是路径还是文件
-    // return Err(SyscallError::EPERM);    // EPERM：Operation Not Permitted
+    return Ok(0)
 }
 
 
