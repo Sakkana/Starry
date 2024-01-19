@@ -1,4 +1,8 @@
 #![cfg_attr(all(not(test), not(doc)), no_std)]
+#![feature(error_in_core)]
+#[warn(unused_imports)]
+#[warn(unused_parens)]
+
 mod ctype;
 pub mod imp;
 use axfs::api::Kstat;

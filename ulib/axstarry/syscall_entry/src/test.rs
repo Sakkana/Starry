@@ -373,7 +373,13 @@ pub const SDCARD_TESTCASES: &[&str] = &[
     // comment
     // "busybox sh ./cyclictest_testcode.sh",
 
-    "hellostd",
+    // my addition
+    // "hellostd",
+    // "busybox ls",
+    // "busybox sh",
+    "busybox touch abc",
+    "busybox mv abc bin/",
+    "busybox ls bin/abc",
 ];
 
 pub const NETPERF_TESTCASES: &[&str] = &[
