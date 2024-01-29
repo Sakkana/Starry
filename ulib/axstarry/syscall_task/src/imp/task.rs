@@ -7,7 +7,7 @@ use axprocess::{
     current_process, current_task, exit_current_task,
     flags::{CloneFlags, WaitStatus},
     futex::clear_wait,
-    link::{deal_with_path, raw_ptr_to_ref_str, AT_FDCWD},
+    link::{create_link, deal_with_path, raw_ptr_to_ref_str, FilePath, AT_FDCWD},
     set_child_tid, sleep_now_task, wait_pid, yield_now_task, Process, PID2PC,
 };
 
@@ -88,6 +88,7 @@ pub fn syscall_exec(
     if path.is_dir() {
         return Err(SyscallError::EISDIR);
     }
+    create_link(&FilePath::new(&"/proc/self/exe").unwrap(), &path);
     let path = path.path().to_string();
     let mut args_vec = Vec::new();
     // args相当于argv，指向了参数所在的地址

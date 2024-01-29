@@ -505,7 +505,7 @@ pub fn syscall_readlinkat(
     if path.is_none() {
         return Err(SyscallError::ENOENT);
     }
-    let path = path.unwrap();
+    let path = path.unwrap();    
     if path.path() == "proc/self/exe" {
         // 针对lmbench_all特判
         let name = "/lmbench_all";
@@ -516,7 +516,7 @@ pub fn syscall_readlinkat(
     }
     if path.path().to_string() != real_path(&(path.path().to_string())) {
         // 说明链接存在
-        let path = path.path();
+        let path = real_path(&(path.path().to_string()));
         let len = bufsiz.min(path.len());
         let slice = unsafe { core::slice::from_raw_parts_mut(buf, len) };
         slice.copy_from_slice(&path.as_bytes()[..len]);
