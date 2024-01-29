@@ -91,9 +91,6 @@ pub fn syscall_exec(
     }
     let path = path.path().to_string();
 
-    // print: exec: path /readlink
-    error!("exec: path {}", path);
-
     let mut args_vec = Vec::new();
     // args相当于argv，指向了参数所在的地址
     loop {
@@ -136,9 +133,6 @@ pub fn syscall_exec(
 
     // 设置 file_path
     curr_process.set_file_path(path.clone());
-    let curr_file_path = curr_process.get_file_path();
-
-    error!("exec: get = {}", curr_file_path);
 
     // 清空futex信号列表
     clear_wait(curr_process.pid(), true);

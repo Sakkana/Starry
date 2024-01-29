@@ -4,6 +4,8 @@
 #define BUFFER_SIZE 1024
 
 int main() {
+    printf("Hello, Readlink !\n");
+    
     char buffer[BUFFER_SIZE];
     ssize_t result = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
 
