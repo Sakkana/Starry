@@ -473,6 +473,8 @@ pub fn syscall_sendfile64(
     }
 }
 
+use axlog::error;
+
 /// 78
 /// readlinkat
 /// 读取符号链接文件的内容
@@ -486,6 +488,7 @@ pub fn syscall_readlinkat(
     bufsiz: usize,
 ) -> SyscallResult {
     let process = current_process();
+    error!("readlink: current process {}", process.pid());
     if process
         .manual_alloc_for_lazy((path as usize).into())
         .is_err()
@@ -506,6 +509,7 @@ pub fn syscall_readlinkat(
         return Err(SyscallError::ENOENT);
     }
     let path = path.unwrap();
+    // error!("readlink: {}", path.path());
     if path.path() == "proc/self/exe" {
         // 针对lmbench_all特判
         let name = "/lmbench_all";
@@ -514,6 +518,22 @@ pub fn syscall_readlinkat(
         slice.copy_from_slice(&name.as_bytes()[..len]);
         return Ok(len as isize);
     }
+
+    // 获取进程自身的符号链接信息
+    if path.path() == "/proc/self/exe" {
+        error!("io.rs: get /proc/self/exe!");
+        
+        // 获取该进程符号链接对应的真正地址
+        let file_real_path = process.get_file_path();
+        error!("io.rs: get from process struct - app name: {}", file_real_path);
+
+        let len = bufsiz.min(file_real_path.len());
+        let slice = unsafe { core::slice::from_raw_parts_mut(buf, len) };
+        slice.copy_from_slice(&file_real_path.as_bytes()[..len]);
+
+        return Ok(file_real_path.len() as isize)
+    }
+
     if path.path().to_string() != real_path(&(path.path().to_string())) {
         // 说明链接存在
         let path = path.path();
@@ -522,6 +542,7 @@ pub fn syscall_readlinkat(
         slice.copy_from_slice(&path.as_bytes()[..len]);
         return Ok(path.len() as isize);
     }
+    // error!("fuck you!!!!!!!!!!!!!!!!!!");
     Err(SyscallError::EINVAL)
 }
 
