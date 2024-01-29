@@ -473,8 +473,6 @@ pub fn syscall_sendfile64(
     }
 }
 
-use axlog::error;
-
 /// 78
 /// readlinkat
 /// 读取符号链接文件的内容

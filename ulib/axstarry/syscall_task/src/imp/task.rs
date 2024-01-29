@@ -75,7 +75,6 @@ pub fn syscall_exit(exit_code: i32) -> ! {
 //     true
 // }
 
-use axlog::error;
 pub fn syscall_exec(
     path: *const u8,
     mut args: *const usize,
